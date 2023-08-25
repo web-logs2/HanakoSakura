@@ -1,4 +1,4 @@
-![](CPY_BGA.png)
+![](./CPY_BGA.png)
 
 # Hanako Sakura
 
