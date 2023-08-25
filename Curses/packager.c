@@ -25,7 +25,13 @@ int main(int count,char** strings){
         return -1;
     }
 
-    fwrite("RIFF\0\0\0\0WAVEfmt ",16,1,out);
+    fseek(in,0,SEEK_END);
+    _32bits = ftell(in) + 0x24;
+    fseek(in,0,SEEK_SET);
+
+    fwrite("RIFF",4,1,out);
+    fwrite(&_32bits,4,1,out);
+    fwrite("WAVEfmt ",8,1,out);
     _32bits = 16;
     fwrite(&_32bits,4,1,out);
     fwrite(&AudioFormat,2,1,out);
@@ -35,12 +41,17 @@ int main(int count,char** strings){
     fwrite(&BlockAlign,2,1,out);
     fwrite(&BitPerSample,2,1,out);
     fwrite("data",4,1,out);
-
+    
     fseek(in,0,SEEK_END);
     _32bits = ftell(in);
     fseek(in,0,SEEK_SET);
 
-    
+    fwrite(&_32bits,4,1,out);
+
+    do{
+        _32bits = fread(buffer,2,1048576,in);
+        fwrite(&buffer,2,_32bits,out);
+    }while(_32bits);
 
 
     fclose(in);
